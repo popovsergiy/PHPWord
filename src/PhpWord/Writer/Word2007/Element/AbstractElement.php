@@ -148,7 +148,7 @@ abstract class AbstractElement
     {
         $method = "get{$styleType}Style";
         $class = "PhpOffice\\PhpWord\\Writer\\Word2007\\Style\\{$styleType}";
-        $styleObject = $this->element->$method();
+        $styleObject = $this->element->{$method}();
 
         $styleWriter = new $class($this->xmlWriter, $styleObject);
         if (method_exists($styleWriter, 'setIsInline')) {

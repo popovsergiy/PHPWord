@@ -57,7 +57,7 @@ class Meta extends AbstractPart
             $method = "set{$property}";
             $propertyNode = $xmlReader->getElement($path, $metaNode);
             if ($propertyNode !== null && method_exists($docProps, $method)) {
-                $docProps->$method($propertyNode->nodeValue);
+                $docProps->{$method}($propertyNode->nodeValue);
             }
         }
 
@@ -69,7 +69,7 @@ class Meta extends AbstractPart
             // Set category, company, and manager property
             if (in_array($property, array('Category', 'Company', 'Manager'))) {
                 $method = "set{$property}";
-                $docProps->$method($propertyNode->nodeValue);
+                $docProps->{$method}($propertyNode->nodeValue);
 
             // Set other custom properties
             } else {

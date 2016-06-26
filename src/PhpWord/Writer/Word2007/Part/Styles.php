@@ -64,7 +64,7 @@ class Styles extends AbstractPart
                 $styleClass = substr(get_class($style), strrpos(get_class($style), '\\') + 1);
                 $method = "write{$styleClass}Style";
                 if (method_exists($this, $method)) {
-                    $this->$method($xmlWriter, $styleName, $style);
+                    $this->{$method}($xmlWriter, $styleName, $style);
                 }
             }
         }

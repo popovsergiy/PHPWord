@@ -158,7 +158,7 @@ class Document
 
             if (isset($markers[$ascii])) { // Marker found: {, }, \, LF, or CR
                 $markerFunction = $markers[$ascii];
-                $this->$markerFunction();
+                $this->{$markerFunction}();
             } else {
                 if (false === $this->isControl) { // Non control word: Push character
                     $this->pushText($char);
@@ -357,7 +357,7 @@ class Document
             if (method_exists($this, $function)) {
                 $directives = $controls[$control];
                 array_shift($directives); // remove the function variable; we won't need it
-                $this->$function($directives);
+                $this->{$function}($directives);
             }
         }
     }

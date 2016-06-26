@@ -70,7 +70,7 @@ class Body extends AbstractPart
             foreach ($notes as $noteId => $noteMark) {
                 list($noteType, $noteTypeId) = explode('-', $noteMark);
                 $method = 'get' . ($noteType == 'endnote' ? 'Endnotes' : 'Footnotes');
-                $collection = $phpWord->$method()->getItems();
+                $collection = $phpWord->{$method}()->getItems();
 
                 if (isset($collection[$noteTypeId])) {
                     $element = $collection[$noteTypeId];

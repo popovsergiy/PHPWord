@@ -158,9 +158,9 @@ class Frame extends AbstractStyle
 
         foreach ($properties as $key => $property) {
             $method = "get{$key}";
-            $value = $style->$method();
+            $value = $style->{$method}();
             if ($value !== null) {
-                $styles[$property] = $style->$method() . $suffix;
+                $styles[$property] = $style->{$method}() . $suffix;
             }
         }
 

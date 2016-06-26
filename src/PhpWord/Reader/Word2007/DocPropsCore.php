@@ -76,7 +76,7 @@ class DocPropsCore extends AbstractPart
                     $value = $this->callbacks[$node->nodeName]($value);
                 }
                 if (method_exists($docProps, $method)) {
-                    $docProps->$method($value);
+                    $docProps->{$method}($value);
                 }
             }
         }

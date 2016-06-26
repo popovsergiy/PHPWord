@@ -41,7 +41,7 @@ class Shape extends AbstractStyle
         $childStyles = array('Frame', 'Fill', 'Outline', 'Shadow', 'Extrusion');
         foreach ($childStyles as $childStyle) {
             $method = "get{$childStyle}";
-            $this->writeChildStyle($xmlWriter, $childStyle, $style->$method());
+            $this->writeChildStyle($xmlWriter, $childStyle, $style->{$method}());
         }
     }
 }

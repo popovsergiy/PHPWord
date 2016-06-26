@@ -602,7 +602,7 @@ class Table extends Border
     private function getTableOnlyProperty($property)
     {
         if (false === $this->isFirstRow) {
-            return $this->$property;
+            return $this->{$property};
         }
 
         return null;
@@ -623,9 +623,9 @@ class Table extends Border
     {
         if (false === $this->isFirstRow) {
             if (true === $isNumeric) {
-                $this->$property = $this->setNumericVal($value, $this->$property);
+                $this->{$property} = $this->setNumericVal($value, $this->{$property});
             } else {
-                $this->$property = $value;
+                $this->{$property} = $value;
             }
         }
 

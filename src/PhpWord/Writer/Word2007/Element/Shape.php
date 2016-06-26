@@ -62,7 +62,7 @@ class Shape extends AbstractElement
 
         // Element style
         if (method_exists($this, $method)) {
-            $this->$method($xmlWriter, $style);
+            $this->{$method}($xmlWriter, $style);
         }
 
         // Child style

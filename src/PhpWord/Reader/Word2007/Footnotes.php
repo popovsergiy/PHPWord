@@ -50,7 +50,7 @@ class Footnotes extends AbstractPart
     public function read(PhpWord $phpWord)
     {
         $getMethod = "get{$this->collection}";
-        $collection = $phpWord->$getMethod()->getItems();
+        $collection = $phpWord->{$getMethod}()->getItems();
 
         $xmlReader = new XMLReader();
         $xmlReader->getDomFromZip($this->docFile, $this->xmlFile);
@@ -69,7 +69,7 @@ class Footnotes extends AbstractPart
                         $this->readRun($xmlReader, $pNode, $element, $this->collection);
                     }
                     $addMethod = "add{$this->element}";
-                    $phpWord->$addMethod($element);
+                    $phpWord->{$addMethod}($element);
                 }
             }
         }

@@ -70,7 +70,7 @@ class FormField extends Text
         $xmlWriter->writeElementBlock('w:enabled', 'w:val', 1);
         $xmlWriter->writeElementBlock('w:name', 'w:val', $name);
         $xmlWriter->writeElementBlock('w:calcOnExit', 'w:val', 0);
-        $this->$writeFormField($xmlWriter, $element);
+        $this->{$writeFormField}($xmlWriter, $element);
         $xmlWriter->endElement(); // w:ffData
         $xmlWriter->endElement(); // w:fldChar
         $xmlWriter->endElement(); // w:r

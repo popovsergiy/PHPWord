@@ -63,7 +63,7 @@ class Section extends AbstractStyle
         $xmlWriter->startElement('w:pgMar');
         foreach ($margins as $attribute => $value) {
             list($method, $default) = $value;
-            $xmlWriter->writeAttribute($attribute, $this->convertTwip($style->$method(), $default));
+            $xmlWriter->writeAttribute($attribute, $this->convertTwip($style->{$method}(), $default));
         }
         $xmlWriter->endElement();
 

@@ -138,7 +138,7 @@ abstract class AbstractStyle
     {
         if ($substyleObject !== null) {
             $method = "get{$substyleProperty}";
-            return $substyleObject->$method();
+            return $substyleObject->{$method}();
         } else {
             return null;
         }
@@ -163,7 +163,7 @@ abstract class AbstractStyle
         }
         $method = 'set' . Text::removeUnderscorePrefix($key);
         if (method_exists($this, $method)) {
-            $this->$method($value);
+            $this->{$method}($value);
         }
 
         return $this;

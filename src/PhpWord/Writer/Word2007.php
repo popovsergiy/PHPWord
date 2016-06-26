@@ -202,7 +202,7 @@ class Word2007 extends AbstractWriter implements WriterInterface
     {
         $getFunction = $elmType == 'header' ? 'getHeaders' : 'getFooters';
         $elmCount = ($section->getSectionId() - 1) * 3;
-        $elements = $section->$getFunction();
+        $elements = $section->{$getFunction}();
         foreach ($elements as &$element) {
             /** @var \PhpOffice\PhpWord\Element\AbstractElement $element Type hint */
             $elmCount++;
@@ -231,7 +231,7 @@ class Word2007 extends AbstractWriter implements WriterInterface
         $noteType = ($noteType == 'endnote') ? 'endnote' : 'footnote';
         $partName = "{$noteType}s";
         $method = 'get' . $partName;
-        $collection = $phpWord->$method();
+        $collection = $phpWord->{$method}();
 
         // Add footnotes media files, relations, and contents
         /** @var \PhpOffice\PhpWord\Collection\AbstractCollection $collection Type hint */

@@ -55,7 +55,7 @@ class Document extends AbstractPart
             foreach ($nodes as $node) {
                 if (isset($readMethods[$node->nodeName])) {
                     $readMethod = $readMethods[$node->nodeName];
-                    $this->$readMethod($xmlReader, $node, $section);
+                    $this->{$readMethod}($xmlReader, $node, $section);
                 }
             }
         }
@@ -77,7 +77,7 @@ class Document extends AbstractPart
                 if (isset($this->rels['document'][$rId])) {
                     list($hfType, $xmlFile, $docPart) = array_values($this->rels['document'][$rId]);
                     $addMethod = "add{$hfType}";
-                    $hfObject = $section->$addMethod($hfSetting['type']);
+                    $hfObject = $section->{$addMethod}($hfSetting['type']);
 
                     // Read header/footer content
                     $xmlReader = new XMLReader();
@@ -87,7 +87,7 @@ class Document extends AbstractPart
                         foreach ($nodes as $node) {
                             if (isset($readMethods[$node->nodeName])) {
                                 $readMethod = $readMethods[$node->nodeName];
-                                $this->$readMethod($xmlReader, $node, $hfObject, $docPart);
+                                $this->{$readMethod}($xmlReader, $node, $hfObject, $docPart);
                             }
                         }
                     }

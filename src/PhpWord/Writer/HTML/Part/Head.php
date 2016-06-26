@@ -61,9 +61,9 @@ class Head extends AbstractPart
         foreach ($propertiesMapping as $key => $value) {
             $value = ($value == '') ? $key : $value;
             $method = "get" . $key;
-            if ($docProps->$method() != '') {
+            if ($docProps->{$method}() != '') {
                 $content .= '<meta name="' . $value . '" content="' .
-                    $docProps->$method() . '" />' . PHP_EOL;
+                    $docProps->{$method}() . '" />' . PHP_EOL;
             }
         }
         $content .= $this->writeStyles();

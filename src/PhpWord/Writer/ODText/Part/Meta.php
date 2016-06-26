@@ -66,8 +66,8 @@ class Meta extends AbstractPart
         $properties = array('Category', 'Company', 'Manager');
         foreach ($properties as $property) {
             $method = "get{$property}";
-            if ($docProps->$method() !== null) {
-                $this->writeCustomProperty($xmlWriter, $property, $docProps->$method());
+            if ($docProps->{$method}() !== null) {
+                $this->writeCustomProperty($xmlWriter, $property, $docProps->{$method}());
             }
         }
 

@@ -271,7 +271,7 @@ class Html
     {
         $styles['paragraph'] = self::parseInlineStyle($node, $styles['paragraph']);
 
-        $newElement = $element->$argument1();
+        $newElement = $element->{$argument1}();
 
         // $attributes = $node->attributes;
         // if ($attributes->getNamedItem('width') !== null) {
