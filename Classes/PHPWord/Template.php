@@ -181,8 +181,11 @@ class PHPWord_Template
 		}
 		if ($numberOfClones > 0) {
 			// read document as XML
-			$xml = DOMDocument::loadXML($this->_documentXML, LIBXML_NOENT | LIBXML_XINCLUDE | LIBXML_NOERROR | LIBXML_NOWARNING);
-
+			$xml = new \DOMDocument();
+			$xml->loadXML($this->_documentXML, LIBXML_NOENT | LIBXML_XINCLUDE | LIBXML_NOERROR | LIBXML_NOWARNING);
+			//$xml = DOMDocument::loadXML($this->_documentXML, LIBXML_NOENT | LIBXML_XINCLUDE | LIBXML_NOERROR | LIBXML_NOWARNING);
+			
+			//\Zend\Debug\Debug::dump($xml);
 			// search for tables
 			$tables = $xml->getElementsByTagName('tbl');
 			foreach ($tables as $table) {
