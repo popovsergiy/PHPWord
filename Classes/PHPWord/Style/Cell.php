@@ -164,7 +164,7 @@ class PHPWord_Style_Cell
         } elseif ($key == '_borderColor') {
             $this->setBorderColor($value);
         } else {
-            $this->$key = $value;
+            $this->{$key} = $value;
         }
     }
 

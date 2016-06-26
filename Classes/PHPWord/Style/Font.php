@@ -129,7 +129,7 @@ class PHPWord_Style_Font
         if ($key == '_size') {
             $value *= 2;
         }
-        $this->$key = $value;
+        $this->{$key} = $value;
     }
 
     public function setName($pValue = 'Arial')

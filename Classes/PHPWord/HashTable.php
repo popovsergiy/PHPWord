@@ -214,7 +214,7 @@ class PHPWord_HashTable
         $vars = get_object_vars($this);
         foreach ($vars as $key => $value) {
             if (is_object($value)) {
-                $this->$key = clone $value;
+                $this->{$key} = clone $value;
             }
         }
     }

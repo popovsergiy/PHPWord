@@ -67,7 +67,7 @@ class PHPWord_Style_Image
 
     public function setStyleValue($key, $value)
     {
-        $this->$key = $value;
+        $this->{$key} = $value;
     }
 
     public function getWidth()

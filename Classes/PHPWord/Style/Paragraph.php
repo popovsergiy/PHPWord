@@ -104,7 +104,7 @@ class PHPWord_Style_Paragraph
         if ($key === '_tabs') {
             $value = new PHPWord_Style_Tabs($value);
         }
-        $this->$key = $value;
+        $this->{$key} = $value;
     }
 
     /**

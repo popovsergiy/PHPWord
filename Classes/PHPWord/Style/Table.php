@@ -46,7 +46,7 @@ class PHPWord_Style_Table
 
     public function setStyleValue($key, $value)
     {
-        $this->$key = $value;
+        $this->{$key} = $value;
     }
 
     public function setCellMarginTop($pValue = null)

@@ -189,7 +189,7 @@ class PHPWord_Section_Settings
         } elseif ($key == '_borderColor') {
             $this->setBorderColor($value);
         } else {
-            $this->$key = $value;
+            $this->{$key} = $value;
         }
     }
 

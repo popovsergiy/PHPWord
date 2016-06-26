@@ -210,7 +210,7 @@ class PHPWord_Style_TableFull
         } elseif ($key == '_cellMargin') {
             $this->setCellMargin($value);
         } else {
-            $this->$key = $value;
+            $this->{$key} = $value;
         }
     }
 

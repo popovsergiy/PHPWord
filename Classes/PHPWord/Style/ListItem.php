@@ -59,7 +59,7 @@ class PHPWord_Style_ListItem
      */
     public function setStyleValue($key, $value)
     {
-        $this->$key = $value;
+        $this->{$key} = $value;
     }
 
     /**
