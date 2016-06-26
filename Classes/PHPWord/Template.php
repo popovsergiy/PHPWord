@@ -82,27 +82,45 @@ class PHPWord_Template
      * @param mixed $search
      * @param mixed $replace
      */
-    public function setValue($search, $replace)
+    public function setValue($search, $replace, $limit = -1)
     {
-        $pattern = '|\$\{([^\}]+)\}|U';
-        preg_match_all($pattern, $this->_documentXML, $matches);
-        foreach ($matches[0] as $value) {
-            $valueCleaned = preg_replace('/<[^>]+>/', '', $value);
-            $valueCleaned = preg_replace('/<\/[^>]+>/', '', $valueCleaned);
-            $this->_documentXML = str_replace($value, $valueCleaned, $this->_documentXML);
+        if($limit === -1) {
+	        $pattern = '|\$\{([^\}]+)\}|U';
+	        preg_match_all($pattern, $this->_documentXML, $matches);
+	        foreach ($matches[0] as $value) {
+	            $valueCleaned = preg_replace('/<[^>]+>/', '', $value);
+	            $valueCleaned = preg_replace('/<\/[^>]+>/', '', $valueCleaned);
+	            $this->_documentXML = str_replace($value, $valueCleaned, $this->_documentXML);
+	        }
+	
+	        if (substr($search, 0, 2) !== '${' && substr($search, -1) !== '}') {
+	            $search = '${' . $search . '}';
+	        }
+	
+	        if (!is_array($replace)) {
+	            if (!PHPWord_Shared_String::IsUTF8($replace)) {
+	                $replace = utf8_encode($replace);
+	            }
+	        }
+	        
+	        $this->_documentXML = str_replace($search, $replace, $this->_documentXML);
+        } else {
+	        if(substr($search, 0, 1) !== '{' && substr($search, -1) !== '}') {
+				$search = '{'.$search.'}';
+			}
+			preg_match_all('/\{[^}]+\}/', $this->_documentXML, $matches);
+			foreach ($matches[0] as $k => $match) {
+				$no_tag = strip_tags($match);
+				if ($no_tag == $search) {
+					$match = '{'.$match.'}';
+					$this->_documentXML = preg_replace($match, $replace, $this->_documentXML, $limit);	
+					if ($limit == 1) {
+						break;
+					}			
+				}
+			}
+	        
         }
-
-        if (substr($search, 0, 2) !== '${' && substr($search, -1) !== '}') {
-            $search = '${' . $search . '}';
-        }
-
-        if (!is_array($replace)) {
-            if (!PHPWord_Shared_String::IsUTF8($replace)) {
-                $replace = utf8_encode($replace);
-            }
-        }
-
-        $this->_documentXML = str_replace($search, $replace, $this->_documentXML);
     }
 
     /**
@@ -134,4 +152,123 @@ class PHPWord_Template
 
         rename($this->_tempFileName, $strFilename);
     }
+    
+    /**
+	* Clone Rows in tables
+	*
+	* @param string $search
+	* @param array $data
+	*/
+	public function cloneRow($search, $data=array()) {		
+		// remove ooxml-tags inside pattern		
+		foreach ($data as $nn => $fieldset) {
+			foreach ($fieldset as $field => $val) {
+				$key = '{'.$search.'.'.$field . '}';
+				$this->setValue($key, $key, 1);
+				$index++;
+			}
+		}
+		// how many clons we need
+		$numberOfClones = 0;
+		if (is_array($data)) {
+			foreach ($data as $colName => $dataArr) {
+				if (is_array($dataArr)) {
+					$c = count($dataArr);
+					if ($c > $numberOfClones)
+						$numberOfClones = $c;
+				}
+			}
+		}
+		if ($numberOfClones > 0) {
+			// read document as XML
+			$xml = DOMDocument::loadXML($this->_documentXML, LIBXML_NOENT | LIBXML_XINCLUDE | LIBXML_NOERROR | LIBXML_NOWARNING);
+
+			// search for tables
+			$tables = $xml->getElementsByTagName('tbl');
+			foreach ($tables as $table) {
+				$text = $table->textContent;
+				// search for pattern. Like {TBL1.
+				if (mb_strpos($text, '{'.$search.'.') !== false) {
+					// search row for clone
+					$patterns = array();
+					$rows = $table->getElementsByTagName('tr');
+					$isUpdate = false;
+					$isFind = false;
+					foreach ($rows as $row) {
+						$text = $row->textContent;
+						$TextWithTags = $xml->saveXML($row);
+						if (
+							mb_strpos($text, '{'.$search.'.') !== false // Pattern found in this row
+							OR
+							(mb_strpos($TextWithTags, '<w:vMerge/>') !== false AND $isFind) // This row is merged with upper row (Upper row have pattern)
+						)
+						{
+							// This row need to clone
+							$patterns[] = $row->cloneNode(true);
+							$isFind = true;
+						} else {
+							// This row don't have any patterns. It's table header or footer
+							if (!$isUpdate and $isFind) {
+								// This is table footer
+								// Insert new rows before footer								
+								$this->InsertNewRows($table, $patterns, $row, $numberOfClones);
+								$isUpdate = true;
+							}
+						}
+					}
+					// if table without footer					
+					if (!$isUpdate and $isFind) {
+						$this->InsertNewRows($table, $patterns, $row, $numberOfClones);
+					}
+				}
+			}
+			// save document
+			$res_string = $xml->saveXML();
+			$this->_documentXML = $res_string;
+			
+			// parsing data
+/*
+			foreach ($data as $colName => $dataArr) {
+				$index = 0;
+				foreach ($dataArr as $value) {
+// 					var_dump($index);
+					$pattern = '${' . $search . '.' . $colName . '}';
+					$repattern = '${' . $search . '.' . $colName . $index . '}';
+					$this->setValue($pattern, $repattern);
+					$index++;
+				}
+			}
+*/
+			
+// 			die;
+			
+			// parsing data
+			foreach ($data as $colName => $dataArr) {
+// 				$index = 0;
+				
+				foreach ($dataArr as $value) {
+					$pattern = '{' . $search . '.' . $colName . '}';
+					$this->setValue($pattern, $value, 1);
+// 					$index++;
+				}
+			}
+		}
+	}
+	
+	/**
+	* Insert new rows in table
+	*
+	* @param object &$table
+	* @param object $patterns
+	* @param object $row
+	* @param int $numberOfClones
+	*/
+	protected function InsertNewRows(&$table, $patterns, $row, $numberOfClones)	{
+		for ($i = 1; $i < $numberOfClones; $i++) {
+			foreach ($patterns as $pattern) {
+				$new_row = $pattern->cloneNode(true);
+				$table->insertBefore($new_row, $row);
+			}
+		}
+	}
 }
